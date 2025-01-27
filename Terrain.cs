@@ -1,23 +1,25 @@
 using Godot;
 using System;
+using System.Threading.Tasks;
 
 public partial class Terrain : Node3D
 {
 	// public when Che {get;set;}ode enters the scene tree for the first time.
 	private PackedScene cellScene;
 	private Node3D[,] terrainGrid;
-	private Timer timer;
+	private Godot.Timer timer;
+	private int weatherOffset = 0;
 	[Export] public Noise TerrainNoise { get; set; }
 	[Export] public Noise BiomNoise { get; set; }
+	
+	[Export] public Vector2I TerrainSize = new Vector2I(64, 64);
 	[Export] public StandardMaterial3D Desert { get; set; }
 	[Export] public StandardMaterial3D Continental { get; set; }
 	[Export] public StandardMaterial3D Polar { get; set; }
-	
-	[Export] public Vector2I TerrainSize = new Vector2I(64, 64);
 	public override void _Ready()
 	{
 		terrainGrid = new Node3D[TerrainSize.Y, TerrainSize.X];
-		timer = this.GetParent().GetNode<Timer>("TickTimer");
+		timer = this.GetParent().GetNode<Godot.Timer>("TickTimer");
 		timer.Timeout += OnTickTimerTimeout;
 		GenerateTerrainGeometry();
 		GenerateBioms();
@@ -58,31 +60,35 @@ public partial class Terrain : Node3D
 
 	private void GenerateBioms()
 	{
-		
 		for (int i = 0; i < TerrainSize.Y; i++)
 		{
 			for (int j = 0; j < TerrainSize.X; j++)
 			{
-				Node3D cell = terrainGrid[i, j];
-				float biomValue = BiomNoise.GetNoise2D(i, j);
+				Cell cell = terrainGrid[i, j] as Cell;
+				float biomValue = BiomNoise.GetNoise2D(i, j+weatherOffset);
 				if (biomValue < 0.3)
 				{
-					cell.GetChild<MeshInstance3D>(0).MaterialOverride = Desert;
+					cell.SetBiome(BiomeEnum.Desert,this);
 				}
 				else if(biomValue < 0.7)
 				{
-					cell.GetChild<MeshInstance3D>(0).MaterialOverride = Continental;
+					cell.SetBiome(BiomeEnum.Continental,this);
 				}
 				else if (biomValue < 1)
 				{
-					cell.GetChild<MeshInstance3D>(0).MaterialOverride = Polar;
+					cell.SetBiome(BiomeEnum.Polar,this);
 				}
 			}
 		}
 	}
+	
 
 	public void OnTickTimerTimeout()
 	{
+		weatherOffset++;
+		GenerateBioms();
 		GD.Print("Tick!");
 	}
+
+
 }
