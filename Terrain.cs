@@ -8,8 +8,10 @@ public partial class Terrain : Node3D
 	private Node3D[,] terrainGrid; 
 	[Export] public Noise TerrainNoise { get; set; }
 	[Export] public Noise BiomNoise { get; set; }
-	[Export] public StandardMaterial3D Tropical { get; set; }
 	[Export] public StandardMaterial3D Desert { get; set; }
+	[Export] public StandardMaterial3D Continental { get; set; }
+	[Export] public StandardMaterial3D Polar { get; set; }
+	
 	[Export] public Vector2I TerrainSize = new Vector2I(64, 64);
 	public override void _Ready()
 	{
@@ -26,8 +28,8 @@ public partial class Terrain : Node3D
 
 	private void GenerateTerrainGeometry()
 	{
-		float x = 10;
-		float y = 10;
+		float x = 0;
+		float y = 0;
 		Vector3 position = Vector3.Zero;
 		Random random = new Random();
 		cellScene = GD.Load<PackedScene>("res://cell.tscn");
@@ -60,15 +62,18 @@ public partial class Terrain : Node3D
 			{
 				Node3D cell = terrainGrid[i, j];
 				float biomValue = BiomNoise.GetNoise2D(i, j);
-				if (biomValue > 0)
-				{
-					cell.GetChild<MeshInstance3D>(0).MaterialOverride = Tropical;
-				}
-				else
+				if (biomValue < 0.3)
 				{
 					cell.GetChild<MeshInstance3D>(0).MaterialOverride = Desert;
 				}
-				
+				else if(biomValue < 0.7)
+				{
+					cell.GetChild<MeshInstance3D>(0).MaterialOverride = Continental;
+				}
+				else if (biomValue < 1)
+				{
+					cell.GetChild<MeshInstance3D>(0).MaterialOverride = Polar;
+				}
 			}
 		}
 	}

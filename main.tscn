@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bdwiorl08ec5h"]
+[gd_scene load_steps=9 format=3 uid="uid://bdwiorl08ec5h"]
 
 [ext_resource type="PackedScene" uid="uid://7f2bfq05gx0w" path="res://terrain.tscn" id="1_axyal"]
 [ext_resource type="PackedScene" uid="uid://djxgay4aq8fp8" path="res://cell.tscn" id="1_rb3xh"]
@@ -8,25 +8,35 @@
 noise_type = 4
 seed = 3
 frequency = 0.062
+fractal_type = 2
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_al45e"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iqjyu"]
-diffuse_mode = 3
-albedo_color = Color(0, 0.8, 0.4, 1)
+noise_type = 3
+seed = 4
+frequency = 0.0057
+fractal_type = 2
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kk5ks"]
 diffuse_mode = 3
 albedo_color = Color(1, 1, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b4slx"]
+diffuse_mode = 3
+albedo_color = Color(0.302621, 0.590044, 0.315462, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p2h5q"]
+diffuse_mode = 3
+albedo_color = Color(0.720484, 1, 0.996806, 1)
 
 [node name="Main" type="Node3D"]
 
 [node name="Terrain" parent="." instance=ExtResource("1_axyal")]
 TerrainNoise = SubResource("FastNoiseLite_pqrr4")
 BiomNoise = SubResource("FastNoiseLite_al45e")
-Tropical = SubResource("StandardMaterial3D_iqjyu")
 Desert = SubResource("StandardMaterial3D_kk5ks")
-TerrainSize = Vector2i(128, 128)
+Continental = SubResource("StandardMaterial3D_b4slx")
+Polar = SubResource("StandardMaterial3D_p2h5q")
+TerrainSize = Vector2i(256, 256)
 
 [node name="Cell" parent="." instance=ExtResource("1_rb3xh")]
 transform = Transform3D(1, -0.000640924, 0.000685984, 0.000640978, 1, -8.28975e-05, -0.000685934, 8.33105e-05, 1, 0, 0, 0)
