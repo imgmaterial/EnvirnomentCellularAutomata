@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://djxgay4aq8fp8"]
+
+[ext_resource type="ArrayMesh" uid="uid://1a24ne5nym25" path="res://hexmesh.obj" id="1_ws3is"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7emqr"]
+shading_mode = 2
+diffuse_mode = 3
+albedo_color = Color(0.852807, 0.592941, 0.205306, 1)
+
+[node name="Cell" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 5, 0, 0, 0, 1, 0, -3.92903, 0)
+material_override = SubResource("StandardMaterial3D_7emqr")
+mesh = ExtResource("1_ws3is")
