@@ -5,7 +5,8 @@ public partial class Terrain : Node3D
 {
 	// public when Che {get;set;}ode enters the scene tree for the first time.
 	private PackedScene cellScene;
-	private Node3D[,] terrainGrid; 
+	private Node3D[,] terrainGrid;
+	private Timer timer;
 	[Export] public Noise TerrainNoise { get; set; }
 	[Export] public Noise BiomNoise { get; set; }
 	[Export] public StandardMaterial3D Desert { get; set; }
@@ -16,6 +17,8 @@ public partial class Terrain : Node3D
 	public override void _Ready()
 	{
 		terrainGrid = new Node3D[TerrainSize.Y, TerrainSize.X];
+		timer = this.GetParent().GetNode<Timer>("TickTimer");
+		timer.Timeout += OnTickTimerTimeout;
 		GenerateTerrainGeometry();
 		GenerateBioms();
 	}
@@ -76,5 +79,10 @@ public partial class Terrain : Node3D
 				}
 			}
 		}
+	}
+
+	public void OnTickTimerTimeout()
+	{
+		GD.Print("Tick!");
 	}
 }
